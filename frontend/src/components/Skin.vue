@@ -37,6 +37,7 @@ export default {
     },
   },
   methods: {
+   
     copyToClipboard(text) {
       const dummy = document.createElement("textarea");
       document.body.appendChild(dummy);
@@ -46,7 +47,12 @@ export default {
       document.body.removeChild(dummy);
     },
   },
-
+  watch: {
+    async skin (newSkin) {
+      console.log("WATHCER")
+      this.colors = await SkinService.getSkinColors(newSkin.icon_url)
+    },
+  },
   async mounted() {
     this.colors = await SkinService.getSkinColors(this.skin.icon_url)
   },
