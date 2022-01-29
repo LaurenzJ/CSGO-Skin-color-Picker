@@ -3,7 +3,7 @@
     <div class="text-2xl font-bold">{{ skin.name }}</div>
     <img :src="skin.icon_url_full" :alt="name" class="object-contain w-full h-60 mt-2" />
     
-    <div>
+    <div class="bg-indigo-100 rounded">
       <div class="flex flex-col items-center justify-center">
         <div v-for="(color, index) in this.colors" :key="index">
           <div style="cursor:copy;" v-on:mousedown="copyToClipboard(color.rgba)">
