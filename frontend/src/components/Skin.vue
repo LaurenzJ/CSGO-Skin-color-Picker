@@ -6,14 +6,17 @@
     <div>
       <div class="flex flex-col items-center justify-center">
         <div v-for="(color, index) in this.colors" :key="index">
-          {{color.rgba}}
-          <div>
-            <div class="w-full h-1" v-bind:style="{ backgroundColor: color.rgba}"></div>
+          <div style="cursor:copy;" v-on:mousedown="copyToClipboard(color.rgba)">
+            {{color.rgba}}
+            <div>
+              <div class="w-full h-1" v-bind:style="{ backgroundColor: color.rgba}"></div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </div>        
   </div>
+  
 
 </template>
 
@@ -31,6 +34,16 @@ export default {
     skin: {
       type: Object,
       required: true,
+    },
+  },
+  methods: {
+    copyToClipboard(text) {
+      const dummy = document.createElement("textarea");
+      document.body.appendChild(dummy);
+      dummy.value = text;
+      dummy.select();
+      document.execCommand("copy");
+      document.body.removeChild(dummy);
     },
   },
 
