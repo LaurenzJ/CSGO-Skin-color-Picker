@@ -9,7 +9,7 @@
       to-teal-400
     "
   >
-    <div>
+    <div class="m-4">
       <input
         class="
           border-2
@@ -19,6 +19,7 @@
           h-10
           px-5
           pr-16
+          
           rounded-lg
           text-sm
           focus:outline-none
@@ -26,13 +27,15 @@
         type="text"
         v-model="searchTerm"
         placeholder="Search"
+        @input="selectedSkin = null"
       />
-      <div class="relative inline-block text-gray-700">
+      
+      <div class="ml-2 relative inline-block text-gray-700"> <!-- SELECTION WEAPON TYPE -->
         <select
+          @input="selectedSkin = null"
           v-model="selected"
           class="
             h-10
-            ml-2
             pl-3
             pr-6
             text-base
@@ -45,7 +48,7 @@
           placeholder="AK-47"
         >
           <option disabled value="">Weapon type</option>
-          <option value="">All</option>
+          <option value=" ">All</option>
           <option>AWP</option>
           <option>AK-47</option>
           <option>AUG</option>
@@ -103,20 +106,27 @@
           </svg>
         </div>
       </div>
+      <div
+        v-if="!selectedSkin"
+      >
+        
+      
+        <div v-for="(skin, index) in filterByTerm" :key="index">
+          <div
+            style="cursor: pointer"
+            v-on:click="selectSkin(skin)"
+            class="flex flex-col justify-center"
+          >
+            {{ skin.name }}
+          </div>
+        </div>
+      </div>
 
       <div v-if="selectedSkin">
         <Skin :skin="selectedSkin" />
       </div>
 
-      <div v-for="(skin, index) in filterByTerm" :key="index">
-        <div
-          style="cursor: pointer"
-          v-on:click="selectSkin(skin)"
-          class="flex flex-col items-center justify-center"
-        >
-          {{ skin.name }}
-        </div>
-      </div>
+      
     </div>
   </div>
 </template>
@@ -141,12 +151,13 @@ export default {
   },
   computed: {
     filterByTerm() {
-      // if searchTerm is empty, return only last 10 skins with knife in name
-      // if (this.searchTerm === "") {
-      //   return this.skins.filter((skin) => {
-      //     return skin.name.includes("★");
-      //   });
-      // }
+      // if searchTerm is return random 10 skins
+      if(this.searchTerm === "" && this.selected === "") {
+        var n = Math.random() * (this.skins.length-11);
+        var m = n + 10;
+        console.log(n)
+        return this.skins.slice(n, m);
+      } // if selectedSkin return no 
       return this.skins.filter((item) => {
         return item.name.toLowerCase().includes(this.searchTerm.toLowerCase()) && item.name.includes(this.selected);
       });
@@ -158,7 +169,7 @@ export default {
       window.scrollTo(0, 0, {
         behavior: "smooth",
       });
-
+      
       this.selectedSkin = skin;
     },
   },
