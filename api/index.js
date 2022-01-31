@@ -51,7 +51,7 @@ app.get("/api/stickers", (req, res) => {
         console.log(error);
     }
 });
-
+// needs to be tested ---
 app.get("/api/stickers/:color_range", (req, res) => { // return stickers within the color range
     var color_range = req.params.color_range
     var selectedStickers = []
@@ -68,6 +68,7 @@ app.get("/api/stickers/:color_range", (req, res) => { // return stickers within 
         console.log(error);
     }
 });
+// ---
 
 // needs to be tested ---
 app.get('/api/stickers/setColors', async (req, res) => { 
