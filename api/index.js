@@ -58,11 +58,11 @@ app.get("/api/stickers/:color_range", (req, res) => { // return stickers within 
     try {
         var rawData = fs.readFileSync('./stickers.json')
         var stickers = JSON.parse(rawData)
-        for(var i = 0; i < stickers.length; i++) {
-            if(stickers[i]['colors'] WITHIN color_range){
-                selectedStickers.push(stickers[i])
-            }
-        }
+        // for(var i = 0; i < stickers.length; i++) {
+        //     if(stickers[i]['colors'] WITHIN color_range){
+        //         selectedStickers.push(stickers[i])
+        //     }
+        // }
         res.send(selectedStickers)
     } catch (error) {
         console.log(error);
@@ -72,6 +72,7 @@ app.get("/api/stickers/:color_range", (req, res) => { // return stickers within 
 
 // needs to be tested ---
 app.get('/api/stickers/setColors', async (req, res) => { 
+    console.log("SIUU")
     var rawData = fs.readFileSync('./stickers.json')
     var stickers = JSON.parse(rawData)
     for(var i = 0; i < stickers.length; i++) {
@@ -91,6 +92,7 @@ app.get('/api/stickers/setColors', async (req, res) => {
             fs.writeFileSync('./stickers.json', stickers)
         })
     }  
+    res.send("SIU")
     
 });
 // ---
