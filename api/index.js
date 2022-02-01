@@ -52,7 +52,8 @@ app.get("/api/stickers", (req, res) => {
     }
 });
 // needs to be tested ---
-app.get("/api/stickers/:color_range", (req, res) => { // return stickers within the color range
+app.get("/api/stickers/get/:color_range", (req, res) => { // return stickers within the color range
+    console.log("YEE")
     var color_range = req.params.color_range
     var selectedStickers = []
     try {
@@ -68,14 +69,17 @@ app.get("/api/stickers/:color_range", (req, res) => { // return stickers within 
         console.log(error);
     }
 });
+
 // ---
 
 // needs to be tested ---
-app.get('/api/stickers/setColors', async (req, res) => { 
+app.get('/api/stickers/update_colors', async (req, res) => { 
     console.log("SIUU ")
     var rawData = fs.readFileSync('./stickers.json')
     var stickers = JSON.parse(rawData)
-    for(var i = 0; i < stickers.length; i++) {
+    console.log(stickers)
+    for(var i = 0; i <= stickers.length; i++) {
+        console.log(stickers[i])
         let icon_url = stickers[i].icon_url;
         let url = `https://steamcommunity-a.akamaihd.net/economy/image/${icon_url}`
         const request = await axios.get(url, {
@@ -88,11 +92,18 @@ app.get('/api/stickers/setColors', async (req, res) => {
                 colors[i]['rgba'] = `rgba(${r},${g},${b},${a})`
                 delete colors[i]['_rgb']
             }
-            stickers[i]['colors'] = colors;
-            fs.writeFileSync('./stickers.json', stickers)
+            // stickers[i]['colors'] = colors;
+            
         })
+        
     }  
-    res.send("SIU")
+    console.log('done')
+    fs.writeFile('./stickers.json', JSON.stringify(stickers, null, 2), (err) => {
+        if (err) throw err;
+        console.log('The file has been saved!');
+    });
+    // console.log(stickers[1])
+    res.send("SIU") 
     
 });
 // ---
