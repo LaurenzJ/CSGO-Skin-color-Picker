@@ -72,7 +72,7 @@ app.get("/api/stickers/:color_range", (req, res) => { // return stickers within 
 
 // needs to be tested ---
 app.get('/api/stickers/setColors', async (req, res) => { 
-    console.log("SIUU")
+    console.log("SIUU ")
     var rawData = fs.readFileSync('./stickers.json')
     var stickers = JSON.parse(rawData)
     for(var i = 0; i < stickers.length; i++) {
