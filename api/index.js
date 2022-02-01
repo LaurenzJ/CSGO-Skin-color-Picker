@@ -101,9 +101,9 @@ app.get('/api/stickers/update_colors', async (req, res) => {
     fs.writeFile('./stickers.json', JSON.stringify(stickers, null, 2), (err) => {
         if (err) throw err;
         console.log('The file has been saved!');
+        res.send("success") 
     });
-    // console.log(stickers[1])
-    res.send("SIU") 
+    res.send("error")
     
 });
 // ---
