@@ -10,8 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.25.0",
+    "color-namer": "^1.4.0",
     "cors": "^2.8.5",
     "express": "^4.17.2",
+    "fast-average-color": "^7.0.1",
     "get-image-colors": "^4.0.0",
     "nodemon": "^2.0.15"
   }
