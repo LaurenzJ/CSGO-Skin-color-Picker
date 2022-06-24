@@ -94,70 +94,48 @@ app.get("/api/stickers/get/:color_range", (req, res) => { // return stickers wit
 
 // needs to be tested ---
 app.get('/api/stickers/update_colors', async (req, res) => { 
+    // crown
+    // var url = `https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXQ9QVcJY8gulROWEXTTOG_xJ2cUE97MgposLWsJ0k3hPCbKTtHuozixtaOkqesZ73Vw2gJ7sBy2uqXrdz22wDmrkNpZG3wOsbLJQKoqBqM`
+    
+    // ibp
+    var url = `https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXQ9QVcJY8gulRYQV_bRvCiwMbQVg8kdFAYv7iwMhdvxPbaTjVN4NP4loSOwqOjMb2HxzICvpMpjOqUotWijgDmr0FkazqlIIPBd1JqZQ2E80_-n7mPlWLmXg`
     try {
-        console.log("SIUU ")
-
-        var stickers_color = []
-
-        var rawData = fs.readFileSync('./stickers.json')
-        var stickers = JSON.parse(rawData)
-        // console.log(stickers)
-        for(var i = 500; i <= stickers.length; i++) {
-            // console.log(stickers[i])
-            let icon_url = stickers[i].icon_url;
-            // let url = `https://steamcommunity-a.akamaihd.net/economy/image/${icon_url}`
-            // let url = `https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXQ9QVcJY8gulRYQV_bRvCiwMbQVg8kdFAYv7iwMhdvxPbaTjVN4NP4loSOwqOjMb2HxzICvpMpjOqUotWijgDmr0FkazqlIIPBd1JqZQ2E80_-n7mPlWLmXg` 
-            let url = `https://steamcommunity-a.akamaihd.net/economy/image/-9a81dlWLwJ2UUGcVs_nsVtzdOEdtWwKGZZLQHTxDZ7I56KU0Zwwo4NUX4oFJZEHLbXQ9QVcJY8gulROWEXTTOG_xJ2cUE97MgposLWsJ0k3hPCbKTtHuozixtaOkqesZ73Vw2gJ7sBy2uqXrdz22wDmrkNpZG3wOsbLJQKoqBqM`
-            const request = await axios.get(url, {
-                responseType: "arraybuffer",
-            });
-            var buffer = Buffer.from(request.data);
-    
-            const fac = new FastAverageColor();
-            
-            const color = fac.getColorFromArray4(buffer, );
-            // console.log(color)
-            // color namer works fine (i suppose :) )
-            const [r,g,b,a] = color
-            color_name = namer(`rgb(${r},${g},${b})`, {
-                pick: ['basic']
-            })
-            console.log(color_name['basic'][0]['name'] + " " + color)
-
-            // console.log(color_name['basic'][0]['name']+ " | " + stickers[i]['name'] + url)
-            // getColors(buffer, options).then(colors => {
-            //     const [r,g,b,a] = colors[1]['_rgb'];
-            //     color_name = namer(`rgb(${r},${g},${b})`, {
-            //         pick: ['basic']
-            //     })
-            //     console.log(color_name['basic'][0]['name'])
-
-            //     // console.log(colors)
-            //     // for (let i = 0; i < colors.length; i++) {
-            //     //     const [r,g,b,a] = colors[i]['_rgb'];
-            //     //     colors[i]['rgba'] = `rgba(${r},${g},${b},${a})`
-            //     //     delete colors[i]['_rgb']
-            //     // }
-            //     // stickers[i]['colors'] = colors;
-                
-            // })
-            
-        }  
-        // console.log('done')
-        // fs.writeFile('./data/stickers.json', JSON.stringify(stickers, null, 2), (err) => {
-        //     if (err) throw err;
-        //     console.log('The file has been saved!');
-        //     res.send("success") 
-        // });
-    } catch (error) {
-        console.log(error);
+        const request = await axios.get(url, {
+            responseType: "arraybuffer",
+        });
+        var options = {
+            count: 2,
+            type: 'image/png'
+        }
+        var buffer = Buffer.from(request.data);
+        getColors(buffer, options).then(colors => {
+            for (let i = 0; i < colors.length; i++) {
+                const [r,g,b,a] = colors[i]['_rgb'];
+                colors[i]['rgba'] = `rgba(${r},${g},${b},${a})`
+                delete colors[i]['_rgb']
+                // const [r,g,b,a] = color
+                color_name = namer(`rgb(${r},${g},${b})`, { distance: 'deltaE' })
+                colors[i]['name'] = color_name['basic']
+                // console.log(color_name['basic'][0]['name'] + " " + color)
+            }
+            res.send(colors)
+        })
+    } catch (err) {
+        throw err;
     }
-    res.send("error")
     
+
+
+    //  // color namer works fine (i suppose :) )
+    // const [r,g,b,a] = color
+    // color_name = namer(`rgb(${r},${g},${b})`, {
+    //     pick: ['basic']
+    // })
+    // console.log(color_name['basic'][0]['name'] + " " + color)
 });
 // ---
 
 app.listen(4000, () => {
-    console.log('Server running on port 4000');
+    console.log('Server running on http://localhost:4000');
 });
 
